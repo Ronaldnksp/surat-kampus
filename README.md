@@ -2,12 +2,17 @@
 
 Aplikasi web pengajuan surat perizinan online untuk mahasiswa, staff administrasi, dan dekan.
 
+## Live Demo
+
+🔗 **https://surat-kampus-production-328c.up.railway.app**
+
 ## Tech Stack
 
 - **Backend:** PHP 8.2 (Native)
-- **Database:** MySQL 8.0
+- **Database:** MySQL 8.0 (Railway)
 - **Frontend:** HTML5, CSS3, JavaScript
-- **Server:** Apache (XAMPP)
+- **Server:** Railway (Docker + PHP CLI)
+- **Cloud Platform:** Railway
 
 ## Fitur Utama
 
@@ -30,7 +35,7 @@ Aplikasi web pengajuan surat perizinan online untuk mahasiswa, staff administras
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/username/surat-kampus.git
+git clone https://github.com/Ronaldnksp/surat-kampus.git
 cd surat-kampus
 ```
 
