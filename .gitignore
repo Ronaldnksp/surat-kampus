@@ -1,0 +1,33 @@
+# Dependencies
+/vendor/
+/node_modules/
+
+# Environment
+.env
+.env.backup
+.env.local
+
+# IDE
+/.fleet
+/.idea
+/.vscode
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temp
+*.tmp
+*.temp
+
+# Uploads (user content)
+/uploads/*
+!/uploads/.gitkeep
+
+# Cache
+/cache/*
+!/cache/.gitkeep

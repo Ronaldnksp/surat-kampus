@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: surat-kampus-app
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+      - uploads:/var/www/html/uploads
+    environment:
+      - DB_HOST=db
+      - DB_NAME=surat_kampus
+      - DB_USER=surat
+      - DB_PASS=secret
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    container_name: surat-kampus-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: surat_kampus
+      MYSQL_ROOT_PASSWORD: rootsecret
+      MYSQL_USER: surat
+      MYSQL_PASSWORD: secret
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./database/surat_kampus.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3307:3306"
+
+volumes:
+  db-data:
+  uploads:
