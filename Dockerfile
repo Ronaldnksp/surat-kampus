@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo pdo_mysql mysqli gd zip intl \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Cache bust: 2026-07-26
 COPY . /var/www/html/
 
 WORKDIR /var/www/html
