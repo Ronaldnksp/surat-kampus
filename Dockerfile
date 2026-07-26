@@ -1,7 +1,8 @@
-FROM php:8.2-apache
+FROM php:8.2-fpm
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
+    nginx \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
@@ -11,13 +12,21 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo pdo_mysql mysqli gd zip intl \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Completely remove event MPM, keep only prefork
-RUN a2dismod mpm_event 2>/dev/null; \
-    rm -f /etc/apache2/mods-enabled/mpm_event.conf 2>/dev/null; \
-    rm -f /etc/apache2/mods-enabled/mpm_event.load 2>/dev/null; \
-    rm -f /usr/lib/apache2/modules/mod_mpm_event.so 2>/dev/null; \
-    a2enmod mpm_prefork; \
-    a2enmod rewrite
+# Nginx config
+RUN echo 'server { \
+    listen 80; \
+    root /var/www/html; \
+    index index.php index.html; \
+    location / { \
+        try_files $uri $uri/ /index.php?$query_string; \
+    } \
+    location ~ \.php$ { \
+        fastcgi_pass 127.0.0.1:9000; \
+        fastcgi_index index.php; \
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name; \
+        include fastcgi_params; \
+    } \
+}' > /etc/nginx/sites-available/default
 
 # Copy application files
 COPY . /var/www/html/
@@ -26,9 +35,7 @@ COPY . /var/www/html/
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/uploads
 
-# Allow .htaccess
-RUN sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
-
 EXPOSE 80
 
-CMD ["apache2-foreground"]
+# Start both php-fpm and nginx
+CMD service php8.2-fpm start && nginx -g "daemon off;"
