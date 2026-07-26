@@ -11,11 +11,13 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo pdo_mysql mysqli gd zip intl \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Disable extra MPM modules - keep only prefork
-RUN sed -i 's/LoadModule mpm_event_module/#LoadModule mpm_event_module/' /etc/apache2/mods-available/mpm_prefork.conf \
-    && a2dismod mpm_event \
-    && a2enmod mpm_prefork \
-    && a2enmod rewrite
+# Completely remove event MPM, keep only prefork
+RUN a2dismod mpm_event 2>/dev/null; \
+    rm -f /etc/apache2/mods-enabled/mpm_event.conf 2>/dev/null; \
+    rm -f /etc/apache2/mods-enabled/mpm_event.load 2>/dev/null; \
+    rm -f /usr/lib/apache2/modules/mod_mpm_event.so 2>/dev/null; \
+    a2enmod mpm_prefork; \
+    a2enmod rewrite
 
 # Copy application files
 COPY . /var/www/html/
