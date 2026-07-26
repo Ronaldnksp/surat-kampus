@@ -47,7 +47,7 @@ $unreadCount = getUnreadNotificationsCount($user['id']);
             <div class="sidebar-footer">
                 <div class="user-info">
                     <span class="user-name"><?= htmlspecialchars($user['name']) ?></span>
-                    <span class="user-role badge <?= getRoleBadgeClass($user['role']) ?>"><?= $user['role_label'] ?></span>
+                    <span class="user-role badge <?= getRoleBadgeClass($user['role']) ?>"><?= getRoleLabel($user['role']) ?></span>
                 </div>
                 <a href="logout.php" class="btn btn-outline btn-sm">Keluar</a>
             </div>
