@@ -3,12 +3,22 @@
 // DATABASE CONFIGURATION
 // ============================================
 
-// Support Railway MySQL env vars (MYSQLHOST) or custom env vars (DB_HOST)
-define('DB_HOST', getenv('MYSQLHOST') ?: (getenv('DB_HOST') ?: 'localhost'));
-define('DB_PORT', getenv('MYSQLPORT') ?: (getenv('DB_PORT') ?: '3306'));
-define('DB_NAME', getenv('MYSQLDATABASE') ?: (getenv('DB_NAME') ?: 'surat_kampus'));
-define('DB_USER', getenv('MYSQLUSER') ?: (getenv('DB_USER') ?: 'root'));
-define('DB_PASS', getenv('MYSQLPASSWORD') ?: (getenv('DB_PASS') ?: ''));
+// Support Railway MYSQL_URL or individual env vars
+$mysqlUrl = getenv('MYSQL_URL');
+if ($mysqlUrl) {
+    $url = parse_url($mysqlUrl);
+    define('DB_HOST', $url['host'] ?? 'localhost');
+    define('DB_PORT', $url['port'] ?? '3306');
+    define('DB_NAME', ltrim($url['path'] ?? '/railway', '/'));
+    define('DB_USER', $url['user'] ?? 'root');
+    define('DB_PASS', $url['pass'] ?? '');
+} else {
+    define('DB_HOST', getenv('MYSQLHOST') ?: (getenv('DB_HOST') ?: 'localhost'));
+    define('DB_PORT', getenv('MYSQLPORT') ?: (getenv('DB_PORT') ?: '3306'));
+    define('DB_NAME', getenv('MYSQLDATABASE') ?: (getenv('DB_NAME') ?: 'surat_kampus'));
+    define('DB_USER', getenv('MYSQLUSER') ?: (getenv('DB_USER') ?: 'root'));
+    define('DB_PASS', getenv('MYSQLPASSWORD') ?: (getenv('DB_PASS') ?: ''));
+}
 
 // App Configuration
 define('APP_NAME', 'Sistem Pengajuan Surat Kampus');
